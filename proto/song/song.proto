@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package go.micro.service.song;
+
+service Song {
+	//name匹配搜索歌曲(数据库或爬虫）create
+	rpc Search(SearchRequest) returns (SearchResponse){}
+	//获取歌曲信息（爬虫或者数据库）
+	rpc GetSongInfo(SongIdRequest) returns (SongResponse){}
+	//根据id_list获取歌曲list
+	rpc GetSongList(ListRequest) returns (SongListResponse){}
+}
+
+message SongInfo{
+	int64 song_id =1;
+	string song_name =2;
+	string artist =3;
+	string song_time_minutes =4;
+	string song_url =5;
+}
+
+message ListRequest{
+	repeated int64 id_list =1;
+}
+message SongListResponse{
+	repeated SongInfo song_list =1;
+}
+
+message SearchRequest{
+	string keyword =1;
+}
+
+message SearchResponse{
+	repeated SongInfo  song_list =1;
+}
+
+message SongIdRequest{
+	int64 song_id =1;
+}
+
+message SongResponse{
+	SongInfo song_info =1;
+	bool is_success =2;
+}
