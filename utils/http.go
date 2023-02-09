@@ -22,7 +22,7 @@ var header = map[string]string{
 	"csrf":       "SA4RWNUIKT8",
 }
 
-func Search(client *http.Client, key string) (sList []model.Song, err error) {
+func Search(client *http.Client, key string) (sList []model.SongModel, err error) {
 	keyUrl := url.QueryEscape(key)
 	req, err := http.NewRequest("GET", searchUrl+keyUrl, nil)
 	if err != nil {
@@ -49,7 +49,7 @@ func Search(client *http.Client, key string) (sList []model.Song, err error) {
 	for i, _ := range list {
 		item := list[i].(map[string]interface{})
 		//pic
-		song := model.Song{
+		song := model.SongModel{
 			Sid:       int64(item["rid"].(float64)),
 			SongName:  item["name"].(string),
 			Artist:    item["artist"].(string),

@@ -7,11 +7,11 @@ import (
 )
 
 type ISongDataService interface {
-	AddSong(*model.SongGormModel) (int64, error)
-	UpdateSong(*model.SongGormModel) error
-	FindSongByID(int64) (*model.SongGormModel, error)
-	FindSongByName(string) ([]model.Song, error)
-	AddSongList([]model.Song) error
+	AddSong(model1 *model.Song) (int64, error)
+	UpdateSong(*model.Song) error
+	FindSongByID(int64) (*model.Song, error)
+	FindSongByName(string) ([]model.SongModel, error)
+	AddSongList([]model.SongModel) error
 }
 
 //创建
@@ -23,7 +23,7 @@ type SongDataService struct {
 	SongRepository repository.ISongRepository
 }
 
-func (u *SongDataService) AddSongList(list []model.Song) error {
+func (u *SongDataService) AddSongList(list []model.SongModel) error {
 	for _, v := range list {
 		_, err := u.SongRepository.CreateSong(model.SongToModel(v))
 		if err != nil {
@@ -33,7 +33,7 @@ func (u *SongDataService) AddSongList(list []model.Song) error {
 	return nil
 }
 
-func (u *SongDataService) FindSongByName(name string) (songList []model.Song, err error) {
+func (u *SongDataService) FindSongByName(name string) (songList []model.SongModel, err error) {
 	songModelList, err := u.SongRepository.FindSongByName(name)
 	if err != nil {
 		return nil, err
@@ -45,16 +45,16 @@ func (u *SongDataService) FindSongByName(name string) (songList []model.Song, er
 }
 
 //插入
-func (u *SongDataService) AddSong(song *model.SongGormModel) (int64, error) {
+func (u *SongDataService) AddSong(song *model.Song) (int64, error) {
 	return u.SongRepository.CreateSong(song)
 }
 
 //更新
-func (u *SongDataService) UpdateSong(song *model.SongGormModel) error {
+func (u *SongDataService) UpdateSong(song *model.Song) error {
 	return u.SongRepository.UpdateSong(song)
 }
 
 //查找
-func (u *SongDataService) FindSongByID(songID int64) (*model.SongGormModel, error) {
+func (u *SongDataService) FindSongByID(songID int64) (*model.Song, error) {
 	return u.SongRepository.FindSongByID(songID)
 }
