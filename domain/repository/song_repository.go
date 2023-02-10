@@ -51,7 +51,7 @@ func (u *SongRepository) DeleteSongByID(songID int64) error {
 
 //更新Song信息
 func (u *SongRepository) UpdateSong(song *model.Song) error {
-	return u.mysqlDb.Model(song).Update(song).Error
+	return u.mysqlDb.Where("song_id = ?", song.SongId).Save(song).Error
 }
 
 //获取结果集

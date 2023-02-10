@@ -28,7 +28,7 @@ type Song struct {
 
 func (s Song) Search(ctx context.Context, req *song.SearchRequest, resp *song.SearchResponse) error {
 	songList, err := s.SongDataService.FindSongByName(req.Keyword)
-	if len(songList) == 0 {
+	if len(songList) < 5 {
 		//抓包
 		songList, err = utils.Search(s.client, req.Keyword)
 		if err != nil {
@@ -64,7 +64,7 @@ func (s Song) GetSongInfo(ctx context.Context, req *song.SongIdRequest, resp *so
 		SongTimeMinutes: songInfo.Total,
 		Artist:          songInfo.Artist,
 	}
-	if songInfo.IsTmp {
+	if songInfo.IsTmp == 1 {
 		//抓包获取Url和内容
 		sUrl, err := utils.GetSongById(s.client, req.SongId)
 		if err != nil {
@@ -77,8 +77,8 @@ func (s Song) GetSongInfo(ctx context.Context, req *song.SongIdRequest, resp *so
 		//更新数据库
 		go func() {
 			err := s.Upload(sUrl, songInfo)
-			if err != nil {
-				panic(err)
+			for err != nil {
+				err = s.Upload(sUrl, songInfo)
 			}
 		}()
 		return nil
@@ -98,7 +98,7 @@ func (s Song) Upload(s_url string, s_model *model.Song) error {
 		return err
 	}
 	log.Info("创建文件成功")
-	s_model.IsTmp = false
+	s_model.IsTmp = 0
 	err = s.SongDataService.UpdateSong(s_model)
 	if err != nil {
 		return err

@@ -10,7 +10,7 @@ type Song struct {
 	SongName string `gorm:"not_null" json:"song_name"`
 	Artist   string `gorm:"not_null" json:"artist"`
 	Total    string `gorm:"not_null" json:"total"`
-	IsTmp    bool   `gorm:"not_null" json:"is_tmp"`
+	IsTmp    int64  `gorm:"not_null" json:"is_tmp"`
 }
 
 type SongModel struct {
@@ -22,18 +22,22 @@ type SongModel struct {
 }
 
 func SongToModel(s SongModel) *Song {
-	isNoTmp := strings.Contains(s.Url, "172.19.96.1")
+	isNoTmp := strings.Contains(s.Url, "192.168.0.106")
+	isTmp := 1
+	if isNoTmp {
+		isTmp = 0
+	}
 	return &Song{
 		SongId:   s.Sid,
 		SongName: s.SongName,
 		Artist:   s.Artist,
 		Total:    s.TotalTime,
-		IsTmp:    !isNoTmp,
+		IsTmp:    int64(isTmp),
 	}
 }
 func ModelToSong(s Song) *SongModel {
 	url := ""
-	if !s.IsTmp {
+	if s.IsTmp == 0 {
 		//todo 这边暂时这样处理
 		url = "http://192.168.0.106.1/" + strconv.FormatInt(s.SongId, 10) + ".mp3"
 	}

@@ -25,7 +25,12 @@ type SongDataService struct {
 
 func (u *SongDataService) AddSongList(list []model.SongModel) error {
 	for _, v := range list {
-		_, err := u.SongRepository.CreateSong(model.SongToModel(v))
+		_, err := u.SongRepository.FindSongByID(v.Sid)
+		if err == nil {
+			//找到了
+			continue
+		}
+		_, err = u.SongRepository.CreateSong(model.SongToModel(v))
 		if err != nil {
 			return err
 		}
