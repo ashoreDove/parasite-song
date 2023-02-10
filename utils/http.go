@@ -3,10 +3,12 @@ package utils
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"github.com/ashoreDove/parasite-song/domain/model"
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strconv"
 )
 
 const (
@@ -59,4 +61,53 @@ func Search(client *http.Client, key string) (sList []model.SongModel, err error
 		sList = append(sList, song)
 	}
 	return sList, nil
+}
+
+func GetSongById(client *http.Client, id int64) (string, error) {
+	url := songSrcUrl + strconv.FormatInt(id, 10)
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return "", err
+	}
+	ctx, cancelFunc := context.WithCancel(context.Background())
+	req = req.WithContext(ctx)
+	for k, v := range header {
+		req.Header.Add(k, v)
+	}
+	resp, err := client.Do(req)
+	defer cancelFunc()
+	if err != nil {
+		return "", err
+	}
+	body, _ := ioutil.ReadAll(resp.Body)
+	var respBody map[string]interface{}
+	err = json.Unmarshal(body, &respBody)
+	if err != nil {
+		return "", err
+	}
+	code := respBody["code"].(float64)
+	if code == 200 {
+		data := respBody["data"].(map[string]interface{})
+		return data["url"].(string), nil
+	}
+	return "", errors.New("获取歌曲url失败")
+}
+
+func GetSongContent(client *http.Client, s_url string) (*[]byte, error) {
+	req, err := http.NewRequest("GET", s_url, nil)
+	if err != nil {
+		return nil, err
+	}
+	ctx, cancelFunc := context.WithCancel(context.Background())
+	for k, v := range header {
+		req.Header.Add(k, v)
+	}
+	req = req.WithContext(ctx)
+	resp, err := client.Do(req)
+	defer cancelFunc()
+	if err != nil {
+		return nil, err
+	}
+	body, _ := ioutil.ReadAll(resp.Body)
+	return &body, nil
 }

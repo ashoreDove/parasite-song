@@ -15,11 +15,14 @@ import (
 var QPS = 100
 
 func main() {
-	cfg, err := common.Init()
+	cfg, err := common.Init(true)
 	if err != nil {
 		log.Error(err)
 		return
 	}
+	//ftp服务
+	defer cfg.FtpConn.Quit()
+
 	//链路追踪
 	t, io, err := common.NewTracer("go.micro.service.song", "localhost:6831")
 	if err != nil {
@@ -49,7 +52,7 @@ func main() {
 	service.Init()
 
 	// Register Handler
-	err = song.RegisterSongHandler(service.Server(), handler.NewSongService(cfg.DB))
+	err = song.RegisterSongHandler(service.Server(), handler.NewSongService(cfg.DB, cfg.FtpConn))
 	if err != nil {
 		log.Fatal(err)
 	}

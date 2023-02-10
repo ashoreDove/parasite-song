@@ -35,7 +35,7 @@ func ModelToSong(s Song) *SongModel {
 	url := ""
 	if !s.IsTmp {
 		//todo 这边暂时这样处理
-		url = "http://172.19.96.1/" + strconv.FormatInt(s.SongId, 10) + ".mp3"
+		url = "http://192.168.0.106.1/" + strconv.FormatInt(s.SongId, 10) + ".mp3"
 	}
 	return &SongModel{
 		Sid:       s.SongId,

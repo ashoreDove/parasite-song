@@ -3,9 +3,10 @@ module github.com/ashoreDove/parasite-song
 go 1.18
 
 require (
-	github.com/ashoreDove/common v0.0.0-20230207134049-792705a7bafe
+	github.com/ashoreDove/common v0.0.0-20230210104204-3009bd75eabb
 	github.com/golang/protobuf v1.4.0
 	github.com/jinzhu/gorm v1.9.16
+	github.com/jlaffaye/ftp v0.1.0
 	github.com/micro/go-micro/v2 v2.9.1
 	github.com/micro/go-plugins/wrapper/ratelimiter/uber/v2 v2.9.1
 	github.com/micro/go-plugins/wrapper/trace/opentracing/v2 v2.9.1
@@ -31,8 +32,10 @@ require (
 	github.com/gogo/protobuf v1.2.1 // indirect
 	github.com/google/uuid v1.1.1 // indirect
 	github.com/hashicorp/consul/api v1.3.0 // indirect
+	github.com/hashicorp/errwrap v1.0.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.1 // indirect
 	github.com/hashicorp/go-immutable-radix v1.0.0 // indirect
+	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/go-rootcerts v1.0.0 // indirect
 	github.com/hashicorp/golang-lru v0.5.3 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
@@ -80,6 +83,5 @@ require (
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.2.4 // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
 	honnef.co/go/tools v0.0.1-2019.2.3 // indirect
 )
